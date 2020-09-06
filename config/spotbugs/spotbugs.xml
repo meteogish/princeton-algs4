@@ -30,8 +30,7 @@
                           SF_SWITCH_NO_DEFAULT,
                           NM_METHOD_NAMING_CONVENTION,
                           NM_CLASS_NAMING_CONVENTION,
-                          NM_FIELD_NAMING_CONVENTION,
-                          EQ_COMPARETO_USE_OBJECT_EQUALS" />
+                          NM_FIELD_NAMING_CONVENTION" />
     </Match>
 
     <!-- from fb-contrib-7.4.3.jar plugin -->
@@ -402,14 +401,14 @@
     <!-- Exclude compare() by slope order in Point.java on collinear assignment -->
     <!-- It produces a warning even though it properly handles NaN              -->
     <Match>
-        <Class name = "~Point.*(226)?" />
+        <Class name = "Point" />
         <BugPattern name="CO_COMPARETO_INCORRECT_FLOATING" />
     </Match>
 
     <!-- Exclude compare() by slope order in Point.java on collinear assignment -->
     <!-- It produces a warning even though it properly handles NaN              -->
     <Match>
-        <Class name = "~(LineSegment)(226)?" />
+        <Class name = "LineSegment" />
         <BugPattern name="HE_HASHCODE_USE_OBJECT_EQUALS" />
     </Match>
 
