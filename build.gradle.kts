@@ -13,8 +13,21 @@ plugins {
     kotlin("jvm") version "1.3.40"
     // Apply the application plugin to add support for building a CLI application
     application
-    id("com.github.spotbugs") version "2.0.0"
+    id("com.github.spotbugs") version "4.5.0"
 }
+
+buildscript {
+  repositories {
+    maven {
+      url = uri("https://plugins.gradle.org/m2/")
+    }
+  }
+  dependencies {
+    classpath("gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:4.5.0")
+  }
+}
+
+apply(plugin = "com.github.spotbugs")
 
 repositories {
     // Use jcenter for resolving dependencies.
@@ -27,12 +40,13 @@ repositories {
 }
 
 spotbugs {
-    toolVersion = "4.0.0-beta4"
-    // sourceSets = [sourceSets.main]
-    effort = "max"
-    reportLevel = "low"
-    includeFilter = file("config/spotbugs/spotbugs.xml")
-    //includeFilter = file("./spotbugs.xml")
+    showProgress.set(true)
+    includeFilter.set(file("config/spotbugs/spotbugs.xml"))
+    tasks.spotbugsMain {
+        reports.create("html") {
+            isEnabled = true
+        }
+    }
 }
 
 checkstyle {
