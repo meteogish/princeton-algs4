@@ -11,8 +11,8 @@
  *************************************************************************/
 
 public class LineSegment {
-    private final Point p;   // one endpoint of this line segment
-    private final Point q;   // the other endpoint of this line segment
+    private final transient Point p;   // one endpoint of this line segment
+    private final transient Point q;   // the other endpoint of this line segment
 
     /**
      * Initializes a new line segment.
@@ -45,6 +45,7 @@ public class LineSegment {
      *
      * @return a string representation of this line segment
      */
+     @Override
     public String toString() {
         return p + " -> " + q;
     }
@@ -57,6 +58,8 @@ public class LineSegment {
      *
      * @throws UnsupportedOperationException if called
      */
+    @Override
+    @SuppressWarnings("PMD.OverrideBothEqualsAndHashcode")
     public int hashCode() {
         throw new UnsupportedOperationException();
     }

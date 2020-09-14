@@ -3,17 +3,19 @@ import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.Stopwatch;
 
 public class PercolationStats {
+    private static final int TWO = 2;
+
     private static final double CONFIDENCE_95 = 1.96;
-    private final int width;
-    private final int trialsCount;
-    private final double gridSites;
+    private final transient int width;
+    private final transient int trialsCount;
+    private final transient double gridSites;
 
-    private double[] fractions;
+    private transient double[] fractions;
 
-    private double mean;
-    private double stdev;
-    private double lo;
-    private double hi;
+    private transient double meanValue;
+    private transient double stdev;
+    private transient double lo;
+    private transient double hi;
 
     public PercolationStats(int n, int trials) {
         if (n <= 0 || trials <= 0) {
@@ -29,7 +31,7 @@ public class PercolationStats {
     }
 
     public double mean() {
-        return mean;
+        return meanValue;
     }
 
     public double stddev() {
@@ -60,23 +62,23 @@ public class PercolationStats {
             fractions[i] = percolation.numberOfOpenSites() / gridSites;
         }
 
-        mean = StdStats.mean(fractions);
+        meanValue = StdStats.mean(fractions);
         stdev = StdStats.stddev(fractions);
 
         double rootStdev = Math.sqrt(stdev);
-        lo = mean - (CONFIDENCE_95 * rootStdev / Math.sqrt(trialsCount));
-        hi = mean + (CONFIDENCE_95 * rootStdev / Math.sqrt(trialsCount));
+        lo = meanValue - (CONFIDENCE_95 * rootStdev / Math.sqrt(trialsCount));
+        hi = meanValue + (CONFIDENCE_95 * rootStdev / Math.sqrt(trialsCount));
     }
 
     public static void main(String[] args) {
-        if (args.length == 2) {
+        if (args.length == TWO) {
             int n = Integer.parseInt(args[0]);
             int t = Integer.parseInt(args[1]);
             Stopwatch sw = new Stopwatch();
 
             PercolationStats stats = new PercolationStats(n, t);
             System.err.println("Elapsed time: " + sw.elapsedTime());
-            System.err.println("mean\t\t\t\t\t\t = " + stats.mean());
+            System.err.println("meanValue\t\t\t\t\t\t = " + stats.mean());
             System.err.println("stddev\t\t\t\t\t\t = " + stats.stddev());
             System.err.println("95% confidence interval\t\t\t\t = " + "[" + stats.confidenceLo() + ", "
                     + stats.confidenceHi() + "]");

@@ -3,15 +3,12 @@ import java.util.NoSuchElementException;
 
 public class Deque<Item> implements Iterable<Item> {
     private class Node {
-        private Item item;
-        private Node next;
-        private Node prev;
+        private transient Item item = null;
+        private transient Node next = null;
+        private transient Node prev = null;
 
         Node()
         {
-            item = null;
-            next = null;
-            prev = null;
         }
 
         Node(Item item, Node next, Node prev)
@@ -22,9 +19,11 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
 
-    private Node pre;
-    private Node post;
-    private int size;
+    private final transient Node pre;
+    private final transient Node post;
+
+    @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
+    private transient int size;
 
     // construct an empty deque
     public Deque() 
@@ -97,13 +96,14 @@ public class Deque<Item> implements Iterable<Item> {
         return item;
     }
     // return an iterator over items in order from front to back
+    @Override
     public Iterator<Item> iterator()
     {
         return new DequeIterator();
     }
 
     private class DequeIterator implements Iterator<Item> {
-        Node current;
+        private transient Node current;
 
         DequeIterator() {
             current = pre.next;
@@ -126,7 +126,7 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
-        Deque<Integer> deque = new Deque<Integer>();
+        Deque<Integer> deque = new Deque<>();
          deque.addLast(43);
          deque.addLast(21);
 

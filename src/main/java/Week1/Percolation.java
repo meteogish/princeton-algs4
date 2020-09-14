@@ -4,13 +4,14 @@ public class Percolation {
     private static final byte OPENED_STATE = 1;
     private static final byte ISFULL_STATE = 2;
     private static final byte ISBOTTOM_STATE = 4;
+    private static final int FIRST = 1;
 
-    private final WeightedQuickUnionUF sites;
-    private final int width;
-    private final int topSite;
+    private final transient WeightedQuickUnionUF sites;
+    private final transient int width;
+    private final transient int topSite;
 
-    private final byte[] sitesStates;
-    private int openedSitesCount;
+    private final transient byte[] sitesStates;
+    private transient int openedSitesCount;
 
     public Percolation(int n) // create n-by-n grid, with all sites blocked
     {
@@ -36,7 +37,7 @@ public class Percolation {
         int currentSite = getSiteIndex(row, col);
         byte currentSiteState = OPENED_STATE;
 
-        if (row > 1) 
+        if (row > FIRST)
         {
             // Can connect top neighbour
             currentSiteState = connectNeighbour(currentSite - width, currentSite, currentSiteState);
@@ -57,7 +58,7 @@ public class Percolation {
             currentSiteState = (byte) (currentSiteState | ISBOTTOM_STATE);
         }
 
-        if (col > 1) 
+        if (col > FIRST) 
         {
             // Can connect left neighbour
             currentSiteState = connectNeighbour(currentSite - 1, currentSite, currentSiteState);

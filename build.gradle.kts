@@ -9,6 +9,7 @@
 plugins {
     // Apply the java plugin to add support for Java
     checkstyle
+    pmd
     java
     kotlin("jvm") version "1.3.40"
     // Apply the application plugin to add support for building a CLI application
@@ -55,6 +56,15 @@ checkstyle {
     isIgnoreFailures = true
 }
 
+pmd {
+    isConsoleOutput = false
+    toolVersion = "6.27.0"
+    rulePriority = 5
+    ruleSetFiles = files("config/pmd/pmd.xml")
+    reportsDir = file("build/reports/pmd")
+    maxFailures.set(10)
+}
+
 dependencies {
     // This dependency is used by the application.
     implementation(kotlin("stdlib-jdk8"))
@@ -69,5 +79,5 @@ dependencies {
 
 application {
     // Define the main class for the application
-    mainClassName = "Deque"
+    mainClassName = "SortingAlgs"
 }

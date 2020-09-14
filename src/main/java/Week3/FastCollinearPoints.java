@@ -2,14 +2,15 @@ import java.util.Arrays;
 import edu.princeton.cs.algs4.LinkedStack;
 
 public class FastCollinearPoints {
-    private final LineSegment[] lineSegments;
+    private final static int THREE = 3;
+    private final transient LineSegment[] lineSegments;
 
     public FastCollinearPoints(final Point[] points) // finds all line segments containing 4 points
     {
         if (points == null)
             throw new IllegalArgumentException("The points is null");
             
-        final LinkedStack<LineSegment> segments = new LinkedStack<LineSegment>();
+        final LinkedStack<LineSegment> segments = new LinkedStack<>();
         final int size = points.length;
         Point[] sortedPoints = new Point[size];
         for (int i = 0; i < size; i++) {
@@ -58,7 +59,7 @@ public class FastCollinearPoints {
                     ++right;
                 }
 
-                if (right - left >= 3)
+                if (right - left >= THREE)
                 {
                     if (originIsInLeftLowerCorner)
                     {

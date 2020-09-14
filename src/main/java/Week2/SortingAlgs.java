@@ -66,6 +66,7 @@ public class SortingAlgs {
         return left.compareTo(right) < 0;
     }
 
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     private static <T> void printArray(T[] array) {
         for (int i = 0; i < array.length; i++) {
             StdOut.println(array[i]);
@@ -81,23 +82,23 @@ public class SortingAlgs {
         return true;
     }
 
-    public static void main(String[] args) {
-        final int count = 20;
-        Double[] array = new Double[count];
+    // public static void main(String[] args) {
+    //     final int count = 20;
+    //     Double[] array = new Double[count];
+        
+    //     for (int i = 0; i < count; i++) {
+    //         array[i] = StdRandom.uniform();
+    //     }
+    //     assert isSorted(array) == false;
 
-        for (int i = 0; i < count; i++) {
-            array[i] = StdRandom.uniform();
-        }
+    //     StdOut.println("Before:");
+    //     printArray(array);
+    //     SortingAlgs.shellSort(array);
 
-        StdOut.println("Before:");
-        printArray(array);
-        SortingAlgs.shellSort(array);
+    //     StdOut.println("After:");
+    //     printArray(array);
 
-        StdOut.println("After:");
-        printArray(array);
-
-        StdOut.print("Is sorted: ");
-        StdOut.println(isSorted(array));
-
-    }
+    //     assert isSorted(array) : "Array is not sorted";
+    //     // StdOut.println(isSorted(array));
+    // }
 }

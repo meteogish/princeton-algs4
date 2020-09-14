@@ -14,8 +14,8 @@ import edu.princeton.cs.algs4.StdDraw;
 
 public class Point implements Comparable<Point> {
 
-    private final int x;     // x-coordinate of this point
-    private final int y;     // y-coordinate of this point
+    private final transient int x;     // x-coordinate of this point
+    private final transient int y;     // y-coordinate of this point
 
     /**
      * Initializes a new point.
@@ -86,6 +86,7 @@ public class Point implements Comparable<Point> {
      *         point; and a positive integer if this point is greater than the
      *         argument point
      */
+     @Override
     public int compareTo(final Point that) {
         /* YOUR CODE HERE */
 
@@ -119,6 +120,7 @@ public class Point implements Comparable<Point> {
      *
      * @return a string representation of this point
      */
+     @Override
     public String toString() {
         /* DO NOT MODIFY */
         return "(" + x + ", " + y + ")";

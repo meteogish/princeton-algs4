@@ -4,8 +4,8 @@ import java.util.NoSuchElementException;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
-    private Item[] items;
-    private int last;
+    private transient Item[] items;
+    private transient int last;
 
     // construct an empty randomized queue
     public RandomizedQueue() {
@@ -46,7 +46,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         Item randomItem = items[randomIndex];
 
         items[randomIndex] = items[last-1];
-        items[--last] = null;
+        items[--last] = null; //NOPMD
 
         if (last >= 0 && last < items.length / 4)
             resize(items.length / 2);
@@ -62,6 +62,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     // return an independent iterator over items in random order
+    @Override
     public Iterator<Item> iterator() {
         return new RandomizedQueueIterator();
     }
@@ -78,10 +79,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     private class RandomizedQueueIterator implements Iterator<Item> {
-        RandomizedQueue<Item> queue;
+        private final transient RandomizedQueue<Item> queue;
 
         RandomizedQueueIterator() {
-            queue = new RandomizedQueue<Item>(last);
+            queue = new RandomizedQueue<>(last);
 
             for (int i = 0; i < last; i++) {
                 queue.enqueue(items[i]);
@@ -98,9 +99,5 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             if (queue.isEmpty()) throw new NoSuchElementException();
             return queue.dequeue();
         }
-    }
-
-    public static void main(String[] args) {
-
     }
 }

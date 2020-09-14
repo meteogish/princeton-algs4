@@ -3,7 +3,7 @@ import java.util.Arrays;
 import edu.princeton.cs.algs4.LinkedStack;
 
 public class BruteCollinearPoints {
-    private final LineSegment[] lineSegments;
+    private final transient LineSegment[] lineSegments;
 
     public BruteCollinearPoints(final Point[] points) // finds all line segments containing 4 points
     {
@@ -22,7 +22,7 @@ public class BruteCollinearPoints {
         
         Arrays.sort(sortedPoints);
         
-        final LinkedStack<LineSegment> segments = new LinkedStack<LineSegment>();
+        final LinkedStack<LineSegment> segments = new LinkedStack<>();
 
         for (int i = 0; i < size; i++)
             for (int j = i + 1; j < size; j++) {
@@ -66,6 +66,7 @@ public class BruteCollinearPoints {
 
     public LineSegment[] segments() // the line segments
     {
+        // New variable to avoid mutation of pricate collection
         LineSegment[] segments = new LineSegment[lineSegments.length];
         for (int i = 0; i < lineSegments.length; i++) {
             segments[i] = lineSegments[i];

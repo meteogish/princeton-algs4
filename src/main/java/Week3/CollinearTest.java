@@ -6,8 +6,8 @@ import edu.princeton.cs.algs4.In;
 public class CollinearTest {
     public static void main(String[] args) {
         StdDraw.enableDoubleBuffering();
-        StdDraw.setXscale(0, 32768);
-        StdDraw.setYscale(0, 32768);
+        StdDraw.setXscale(0, 32_768);
+        StdDraw.setYscale(0, 32_768);
         StdDraw.setPenRadius(0.01);  // make the points a bit larger
     
         // read in the input
@@ -18,9 +18,9 @@ public class CollinearTest {
         // String filename = "/Users/yevhenii/Documents/Repositories/algs4/week2/src/main/java/week3/duplicates.txt";
 
         In in = new In(filename);
-        int N = in.readInt();
-        Point[] points = new Point[N];
-        for (int i = 0; i < N; i++) {
+        int n = in.readInt();
+        Point[] points = new Point[n];
+        for (int i = 0; i < n; i++) {
             int x = in.readInt();
             int y = in.readInt();
             Point p = new Point(x, y);  // make the points a bit larger
