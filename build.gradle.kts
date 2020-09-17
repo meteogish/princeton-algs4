@@ -79,5 +79,5 @@ dependencies {
 
 application {
     // Define the main class for the application
-    mainClassName = "SortingAlgs"
+    mainClassName = "BoardTest"
 }
