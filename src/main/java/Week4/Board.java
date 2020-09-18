@@ -99,6 +99,12 @@ public class Board {
         return true;
     }
 
+    @Override
+    @SuppressWarnings("PMD.OverrideBothEqualsAndHashcode")
+    public int hashCode() {
+        throw new UnsupportedOperationException();
+    }
+
     // all neighboring boards
     public Iterable<Board> neighbors() {
         return null;
