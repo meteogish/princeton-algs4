@@ -26,9 +26,9 @@ public class Board {
         
         sb.append(_tiles.length);
 
-        for (int j = 0; j < _tiles.length; j++) {
+        for (int i = 0; i < _tiles.length; i++) {
             sb.append("\n");
-            for (int i = 0; i < _tiles.length; i++) {
+            for (int j = 0; j < _tiles.length; j++) {
                 sb.append(" ");
                 sb.append(_tiles[i][j]);
             }
@@ -49,7 +49,8 @@ public class Board {
             for (int j = 0; j < _dimension; j++) {
                 int shouldBe = i * _dimension + j + 1;
                 int currentState = _tiles[i][j];
-                if (currentState != shouldBe) {
+                if (currentState != 0 && !((_dimension - (i+j)) == 2) && currentState != shouldBe) {
+                    System.out.println("Increase hamming at point " + i + " " + j);
                     ++result;
                 }
             }

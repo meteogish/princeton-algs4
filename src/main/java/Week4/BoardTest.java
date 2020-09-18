@@ -14,6 +14,9 @@ public class BoardTest {
                 tiles[i][j] = in.readInt();
         Board initial = new Board(tiles);
         
+        StdOut.print(initial.toString());
+
+        StdOut.print("\n");
         StdOut.print(initial.hamming());
         // // solve the puzzle
         // Solver solver = new Solver(initial);
