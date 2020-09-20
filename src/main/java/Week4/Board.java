@@ -94,7 +94,7 @@ public class Board {
 
     // is this board the goal board?
     public boolean isGoal() {
-        return false;
+        return (_dimension - zeroAtX == 1) && (_dimension - zeroAtY == 1);
     }
 
     // does this board equal y?
