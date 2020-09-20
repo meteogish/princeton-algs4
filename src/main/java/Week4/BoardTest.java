@@ -6,7 +6,7 @@ public class BoardTest {
     public static void main(String[] args) {
         // create initial board from file
         
-        In in = new In("/Users/yevhenii/Documents/Repositories/princeton-algs4/tile3.txt");
+        In in = new In("/Users/yevhenii/Documents/Repositories/princeton-algs4/tile3_incorrect.txt");
         int n = in.readInt();
         int[][] tiles = new int[n][n];
         for (int i = 0; i < n; i++)
@@ -17,8 +17,13 @@ public class BoardTest {
         StdOut.print(initial.toString());
 
         StdOut.print("\n");
-        StdOut.print(initial.hamming());
-        // // solve the puzzle
+        StdOut.print("manhattan = " + initial.manhattan());
+        StdOut.print("\n");
+        StdOut.print("haming = " + initial.hamming());
+
+	    // StdOut.print("Its Working");
+	
+	    // // solve the puzzle
         // Solver solver = new Solver(initial);
     
         // // print solution to standard output
