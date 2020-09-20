@@ -1,8 +1,12 @@
+import java.util.LinkedList;
+
 import edu.princeton.cs.algs4.StdOut;
 
 public class Board {
     private transient int _dimension;
     private transient int[][] _tiles;
+    private int zeroAtY;
+    private int zeroAtX;
 
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
@@ -17,6 +21,15 @@ public class Board {
 
         _tiles = tiles;
         _dimension = tiles.length;
+
+        for (int i = 0; i < _dimension; i++) {
+            for (int j = 0; j < _dimension; j++) {
+                if (tiles[i][j] == 0) {
+                    zeroAtY = i;
+                    zeroAtX = j;
+                }
+            }
+        }
     }
                                            
     // string representation of this board
@@ -111,12 +124,45 @@ public class Board {
 
     // all neighboring boards
     public Iterable<Board> neighbors() {
-        return null;
+        LinkedList<Board> result = new LinkedList<>();
+
+        if (zeroAtX - 1 >= 0) {
+            result.add(createNeighbor(zeroAtY, zeroAtX - 1));
+        }
+
+        if (zeroAtX + 1 < _dimension) {
+            result.add(createNeighbor(zeroAtY, zeroAtX + 1));
+        }
+
+        if (zeroAtY - 1 >= 0) {
+            result.add(createNeighbor(zeroAtY - 1, zeroAtX));
+        }
+
+        if (zeroAtY + 1 < _dimension) {
+            result.add(createNeighbor(zeroAtY + 1, zeroAtX));
+        }
+
+        return result;
     }
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
         return null;
+    }
+
+    private Board createNeighbor(int moveZeroToY, int moveZeroToX) {
+        int[][] copy = new int[_dimension][_dimension];
+        for (int i = 0; i < _dimension; i++) {
+            for (int j = 0; j < _dimension; j++) {
+                copy[i][j] = _tiles[i][j];
+            }
+        }
+
+        int t = copy[moveZeroToY][moveZeroToX];
+        copy[zeroAtY][zeroAtX] = t;
+        copy[moveZeroToY][moveZeroToX] = 0;
+
+        return new Board(copy);
     }
 
     // unit testing (not graded)
