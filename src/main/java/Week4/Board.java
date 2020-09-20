@@ -49,8 +49,8 @@ public class Board {
             for (int j = 0; j < _dimension; j++) {
                 int shouldBe = i * _dimension + j + 1;
                 int currentState = _tiles[i][j];
-                if (currentState != 0 && !((_dimension - (i+j)) == 2) && currentState != shouldBe) {
-                    System.out.println("Increase hamming at point " + i + " " + j);
+                if (currentState != 0 && currentState != shouldBe) {
+                    // System.out.println("Increase hamming at point " + i + " " + j);
                     ++result;
                 }
             }
@@ -69,10 +69,10 @@ public class Board {
                 int x = (currentState - 1) % _dimension;
                 int y = (currentState - 1) / _dimension;
                 int dist = 
-                    currentState == 0 && ((i + j) == (_dimension + 1))
+                    currentState == 0
                     ? 0
-                    : (y - i) + (x - j);
-                System.out.println("(" + i + " , " + j + ") = " + dist);
+                    : Math.abs(y - i) + Math.abs(x - j);
+                // System.out.println("(" + i + " , " + j + ") = " + dist);
                 result += dist;
             }
         }
