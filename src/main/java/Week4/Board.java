@@ -68,8 +68,11 @@ public class Board {
 
                 int x = (currentState - 1) % _dimension;
                 int y = (currentState - 1) / _dimension;
-                int dist = (y - i) + (x - j);
-
+                int dist = 
+                    currentState == 0 && ((i + j) == (_dimension + 1))
+                    ? 0
+                    : (y - i) + (x - j);
+                System.out.println("(" + i + " , " + j + ") = " + dist);
                 result += dist;
             }
         }
