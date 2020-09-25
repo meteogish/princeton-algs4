@@ -1,7 +1,5 @@
 import java.util.LinkedList;
 
-import edu.princeton.cs.algs4.StdOut;
-
 public class Board {
     private transient int _dimension;
     private transient int[][] _tiles;
