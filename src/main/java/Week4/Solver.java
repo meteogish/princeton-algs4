@@ -1,11 +1,7 @@
 import java.util.Comparator;
 import java.util.LinkedList;
 
-import javax.print.attribute.standard.PrintQuality;
-
-import edu.princeton.cs.algs4.LinkedStack;
 import edu.princeton.cs.algs4.MinPQ;
-import edu.princeton.cs.algs4.StdOut;
 
 public class Solver {
     private MinPQ<Board> _queue;
@@ -39,7 +35,7 @@ public class Solver {
 
     // min number of moves to solve initial board; -1 if unsolvable
     public int moves() {
-        return _movesCount;
+        return _movesCount - 1;
     }
 
     // sequence of boards in a shortest solution; null if unsolvable
@@ -68,7 +64,9 @@ public class Solver {
             }
 
             for (Board neighbour : _searchNode.neighbors()) {
-                _queue.insert(neighbour);
+                if (!neighbour.equals(_previousSearchNode)) {
+                    _queue.insert(neighbour);
+                } 
             }
         }
     }
