@@ -4,11 +4,9 @@ import java.util.LinkedList;
 import edu.princeton.cs.algs4.MinPQ;
 
 public class Solver {
-    private MinPQ<Board> _queue;
+    private SearchNode _searchNode;
 
-    private Board _searchNode;
-
-    private Board _previousSearchNode;
+    private SearchNode _previousSearchNode;
 
     private int _movesCount;
 
@@ -20,12 +18,12 @@ public class Solver {
             throw new IllegalArgumentException();
         }
 
-        _searchNode = initial;
-        _previousSearchNode = null;
         _movesCount = 0;
-        _queue = new MinPQ<>(6, new HammingComparer());
+        _searchNode = new SearchNode(initial, initial.manhattan() + _movesCount);
+        _previousSearchNode = null;
         _solutionBoards = new LinkedList<>();
         ProcessSolution();
+        
     }
 
     // is the initial board solvable? (see below)
@@ -45,13 +43,14 @@ public class Solver {
     }
 
     private void ProcessSolution() {
+        MinPQ<SearchNode> _queue = new MinPQ<>(6);
         _queue.insert(_searchNode);
 
         while (true) {
             _previousSearchNode = _searchNode;
             _searchNode = _queue.delMin();
             
-            _solutionBoards.add(_searchNode);
+            _solutionBoards.add(_searchNode.board);
 
             //StdOut.print("Next node: \n");
             //StdOut.print(_searchNode.toString());
@@ -59,31 +58,40 @@ public class Solver {
 
             ++_movesCount;
             
-            if (_searchNode.isGoal()) {
+            if (_searchNode.board.isGoal()) {
                 break;
             }
 
-            for (Board neighbour : _searchNode.neighbors()) {
-                if (!neighbour.equals(_previousSearchNode)) {
-                    _queue.insert(neighbour);
-                } 
+            for (Board neighbour : _searchNode.board.neighbors()) {
+                if (!neighbour.equals(_previousSearchNode.board)) {
+                    _queue.insert(new SearchNode(neighbour, neighbour.manhattan() + _movesCount));
+                }
             }
         }
     }
 
-    private class HammingComparer implements Comparator<Board> {
+    private class SearchNode implements Comparable<SearchNode> {
+        private Board board;
+        private int priority;
+
+        public SearchNode(Board board, int priority) {
+            super();
+            this.board = board;
+            this.priority = priority;
+        }
 
         @Override
-        public int compare(Board o1, Board o2) {
-           int hammingFirst = o1.hamming() + Solver.this._movesCount;
-           int hammingSecond = o2.hamming() + Solver.this._movesCount;
-
-           if (hammingFirst > hammingSecond) 
+        public int compareTo(Solver.SearchNode right) {
+            if (priority > right.priority) {
                 return 1;
-            else if (hammingFirst < hammingSecond)
+            } 
+            else if (priority < right.priority) {
                 return -1;
-            else 
+            }
+            else {
                 return 0;
+            }
         }
+
     }
 }
