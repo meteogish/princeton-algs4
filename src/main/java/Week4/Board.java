@@ -2,7 +2,7 @@ import java.util.LinkedList;
 
 public class Board {
     private transient int _dimension;
-    public transient int[] _tiles1D;
+    private transient int[] _tiles1D;
     private int zeroAtY;
     private int zeroAtX;
 
@@ -94,19 +94,12 @@ public class Board {
 
     // is this board the goal board?
     public boolean isGoal() {
-         for (int i = 0; i < _dimension; i++) {
-            for (int j = 0; j < _dimension; j++) {
-
-                if (i + 1 == _dimension && j + 1 == _dimension && _tiles1D[to1D(i, j)] == 0) {
-                    continue;
-                }
-                
-                int shouldBe = i * _dimension + j + 1;
-                if ((i + 1 != _dimension || j + 1 != _dimension) && _tiles1D[to1D(i, j)] != shouldBe) {
+        for (int i = 0; i < _dimension * _dimension - 1; i++) {
+           if (_tiles1D[i] == 0 || _tiles1D[i] != i + 1) {
                     return false;
                 }
             }
-        }
+        
         return true;
     }
 
