@@ -2,7 +2,7 @@ import java.util.LinkedList;
 
 public class Board {
     private transient int _dimension;
-    private transient int[][] _tiles;
+    public transient int[] _tiles1D;
     private int zeroAtY;
     private int zeroAtX;
 
@@ -17,8 +17,8 @@ public class Board {
             throw new IllegalArgumentException("The tiles size is not supported");
         }
 
-        _tiles = tiles;
         _dimension = tiles.length;
+        _tiles1D = new int[_dimension * _dimension];
 
         for (int i = 0; i < _dimension; i++) {
             for (int j = 0; j < _dimension; j++) {
@@ -26,6 +26,8 @@ public class Board {
                     zeroAtY = i;
                     zeroAtX = j;
                 }
+
+                _tiles1D[to1D(i, j)] = tiles[i][j];
             }
         }
     }
@@ -35,13 +37,13 @@ public class Board {
         
         StringBuilder sb = new StringBuilder();
         
-        sb.append(_tiles.length);
+        sb.append(_dimension);
 
-        for (int i = 0; i < _tiles.length; i++) {
+        for (int i = 0; i < _dimension; i++) {
             sb.append("\n");
-            for (int j = 0; j < _tiles.length; j++) {
+            for (int j = 0; j < _dimension; j++) {
                 sb.append(" ");
-                sb.append(_tiles[i][j]);
+                sb.append(_tiles1D[to1D(i, j)]);
             }
         }
         return sb.toString();
@@ -59,7 +61,7 @@ public class Board {
         for (int i = 0; i < _dimension; i++) {
             for (int j = 0; j < _dimension; j++) {
                 int shouldBe = i * _dimension + j + 1;
-                int currentState = _tiles[i][j];
+                int currentState = _tiles1D[to1D(i, j)];
                 if (currentState != 0 && currentState != shouldBe) {
                     // System.out.println("Increase hamming at point " + i + " " + j);
                     ++result;
@@ -75,7 +77,7 @@ public class Board {
 
         for (int i = 0; i < _dimension; i++) {
             for (int j = 0; j < _dimension; j++) {
-                int currentState = _tiles[i][j];
+                int currentState = _tiles1D[to1D(i, j)];
 
                 int x = (currentState - 1) % _dimension;
                 int y = (currentState - 1) / _dimension;
@@ -95,12 +97,12 @@ public class Board {
          for (int i = 0; i < _dimension; i++) {
             for (int j = 0; j < _dimension; j++) {
 
-                if (i + 1 == _dimension && j + 1 == _dimension && _tiles[i][j] == 0) {
+                if (i + 1 == _dimension && j + 1 == _dimension && _tiles1D[to1D(i, j)] == 0) {
                     continue;
                 }
                 
                 int shouldBe = i * _dimension + j + 1;
-                if ((i + 1 != _dimension || j + 1 != _dimension) && _tiles[i][j] != shouldBe) {
+                if ((i + 1 != _dimension || j + 1 != _dimension) && _tiles1D[to1D(i, j)] != shouldBe) {
                     return false;
                 }
             }
@@ -118,7 +120,7 @@ public class Board {
 
         for (int i = 0; i < _dimension; i++) {
             for (int j = 0; j < _dimension; j++) {
-                if (_tiles[i][j] != that._tiles[i][j]) {
+                if (_tiles1D[to1D(i,j)] != that._tiles1D[to1D(i,j)]) {
                     return false;
                 }
             }
@@ -165,7 +167,7 @@ public class Board {
         int[][] copy = new int[_dimension][_dimension];
         for (int i = 0; i < _dimension; i++) {
             for (int j = 0; j < _dimension; j++) {
-                copy[i][j] = _tiles[i][j];
+                copy[i][j] = _tiles1D[to1D(i,j)];
             }
         }
 
@@ -174,6 +176,10 @@ public class Board {
         copy[moveZeroToY][moveZeroToX] = 0;
 
         return new Board(copy);
+    }
+
+    private int to1D(int y, int x) {
+        return y * _dimension + x;
     }
 
     // unit testing (not graded)
