@@ -31,6 +31,20 @@ public class Board {
             }
         }
     }
+
+    public boolean isSolvable() {
+        int invCount = 0;
+
+        for (int i = 0; i < _dimension * _dimension; i++) {
+            for(int j = i + 1; j < _dimension * _dimension; j++) {
+                if (_tiles1D[i] != 0 && _tiles1D[j] != 0  && _tiles1D[i] > _tiles1D[j]) {
+                    ++invCount;
+                }
+            }
+        }
+
+        return invCount % 2 == 0;
+    }
                                            
     // string representation of this board
     public String toString() {
@@ -96,9 +110,9 @@ public class Board {
     public boolean isGoal() {
         for (int i = 0; i < _dimension * _dimension - 1; i++) {
            if (_tiles1D[i] == 0 || _tiles1D[i] != i + 1) {
-                    return false;
-                }
-            }
+               return false;
+           } 
+        }
         
         return true;
     }

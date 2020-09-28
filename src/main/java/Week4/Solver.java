@@ -13,12 +13,15 @@ public class Solver {
         }
 
         _movesCount = 0;
-        ProcessSolution(initial);
+        boolean isSolvable = initial.isSolvable();
+        if (isSolvable) {
+            ProcessSolution(initial);
+        }
     }
 
     // is the initial board solvable? (see below)
     public boolean isSolvable() {
-        return true;
+        return _solutionSearchNode != null;
     }
 
     // min number of moves to solve initial board; -1 if unsolvable
