@@ -1,16 +1,10 @@
-import java.util.Comparator;
-import java.util.LinkedList;
-
 import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.Stack;
+import edu.princeton.cs.algs4.StdOut;
 
 public class Solver {
-    private SearchNode _searchNode;
-
-    private SearchNode _previousSearchNode;
-
+    private SearchNode _solutionSearchNode;
     private int _movesCount;
-
-    private LinkedList<Board> _solutionBoards; 
 
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
@@ -19,11 +13,7 @@ public class Solver {
         }
 
         _movesCount = 0;
-        _searchNode = new SearchNode(initial, initial.manhattan() + _movesCount);
-        _previousSearchNode = null;
-        _solutionBoards = new LinkedList<>();
-        ProcessSolution();
-        
+        ProcessSolution(initial);
     }
 
     // is the initial board solvable? (see below)
@@ -38,33 +28,46 @@ public class Solver {
 
     // sequence of boards in a shortest solution; null if unsolvable
     public Iterable<Board> solution() {
-        LinkedList<Board> l = new LinkedList<>(_solutionBoards);
-        return l;
+        if (_solutionSearchNode != null) {
+            SearchNode tempNode = _solutionSearchNode;
+            Stack<Board> boards = new Stack<>();
+            
+            while (tempNode != null) {
+                boards.push(tempNode.board);
+                tempNode = tempNode._previous;
+            } 
+            return boards;
+        }
+        return null;
     }
 
-    private void ProcessSolution() {
-        MinPQ<SearchNode> _queue = new MinPQ<>(6);
-        _queue.insert(_searchNode);
+    private void ProcessSolution(Board initial) {
+        MinPQ<SearchNode> _queue = new MinPQ<>();
+        SearchNode searchNode = new SearchNode(initial, initial.manhattan() + _movesCount, null);
+        _queue.insert(searchNode);
 
         while (true) {
-            _previousSearchNode = _searchNode;
-            _searchNode = _queue.delMin();
+            searchNode = _queue.delMin();
             
-            _solutionBoards.add(_searchNode.board);
-
-            //StdOut.print("Next node: \n");
-            //StdOut.print(_searchNode.toString());
-            //StdOut.print("\n");
+            StdOut.print("Next node: \n");
+            StdOut.print(searchNode.board.toString());
+            StdOut.print("\n");
 
             ++_movesCount;
             
-            if (_searchNode.board.isGoal()) {
+            if (searchNode.board.isGoal()) {
+                _solutionSearchNode = searchNode;
                 break;
             }
-
-            for (Board neighbour : _searchNode.board.neighbors()) {
-                if (!neighbour.equals(_previousSearchNode.board)) {
-                    _queue.insert(new SearchNode(neighbour, neighbour.manhattan() + _movesCount));
+            
+            for (Board neighbour : searchNode.board.neighbors()) {
+                if (searchNode._previous != null) {
+                    if (!neighbour.equals(searchNode._previous.board)) {
+                        _queue.insert(new SearchNode(neighbour, neighbour.manhattan() + _movesCount, searchNode));
+                    }
+                }
+                else {
+                    _queue.insert(new SearchNode(neighbour, neighbour.manhattan() + _movesCount, searchNode));
                 }
             }
         }
@@ -73,11 +76,13 @@ public class Solver {
     private class SearchNode implements Comparable<SearchNode> {
         private Board board;
         private int priority;
+        private SearchNode _previous;
 
-        public SearchNode(Board board, int priority) {
+        public SearchNode(Board board, int priority, SearchNode previous) {
             super();
             this.board = board;
             this.priority = priority;
+            this._previous = previous;
         }
 
         @Override
