@@ -92,7 +92,20 @@ public class Board {
 
     // is this board the goal board?
     public boolean isGoal() {
-        return (_dimension - zeroAtX == 1) && (_dimension - zeroAtY == 1);
+         for (int i = 0; i < _dimension; i++) {
+            for (int j = 0; j < _dimension; j++) {
+
+                if (i + 1 == _dimension && j + 1 == _dimension && _tiles[i][j] == 0) {
+                    continue;
+                }
+                
+                int shouldBe = i * _dimension + j + 1;
+                if ((i + 1 != _dimension || j + 1 != _dimension) && _tiles[i][j] != shouldBe) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     // does this board equal y?
