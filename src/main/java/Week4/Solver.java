@@ -83,9 +83,9 @@ public class Solver {
     }
 
     private class SearchNode implements Comparable<SearchNode> {
-        private Board board;
-        private int priority;
-        private SearchNode _previous;
+        private final Board board;
+        private final int priority;
+        private final SearchNode _previous;
 
         public SearchNode(Board board, int movesCount, SearchNode previous) {
             super();

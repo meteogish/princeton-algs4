@@ -3,8 +3,8 @@ import java.util.LinkedList;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class Board {
-    private transient int _dimension;
-    private transient int[] _tiles1D;
+    private final transient int _dimension;
+    private final transient int[] _tiles1D;
     private int zeroAtY;
     private int zeroAtX;
 
@@ -62,9 +62,9 @@ public class Board {
 
         for (int i = 0; i < _dimension; i++) {
             for (int j = 0; j < _dimension; j++) {
-                int shouldBe = i * _dimension + j + 1;
+                int rightValue = i * _dimension + j + 1;
                 int currentState = _tiles1D[to1D(i, j)];
-                if (currentState != 0 && currentState != shouldBe) {
+                if (currentState != 0 && currentState != rightValue) {
                     // System.out.println("Increase hamming at point " + i + " " + j);
                     ++result;
                 }
@@ -108,6 +108,10 @@ public class Board {
     // does this board equal y?
     public boolean equals(Object y) {
         Board that = (Board) y;
+
+        if (that == null) {
+            return false;
+        }
 
         if (_dimension != that._dimension) {
             return false;
