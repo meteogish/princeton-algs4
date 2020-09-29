@@ -7,6 +7,9 @@ public class Board {
     private final int[] tiles1D;
     private int zeroAtY;
     private int zeroAtX;
+    
+    private final int firstTwinRandomTile;
+    private final int secondTwinRandomTile;
 
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
@@ -32,6 +35,9 @@ public class Board {
                 tiles1D[to1D(i, j)] = tiles[i][j];
             }
         }
+
+        firstTwinRandomTile = getRandomNotZeroTileNotLike(-1);
+        secondTwinRandomTile = getRandomNotZeroTileNotLike(firstTwinRandomTile);
     }
                                            
     // string representation of this board
@@ -106,12 +112,20 @@ public class Board {
     }
 
     // does this board equal y?
-    public boolean equals(Object y) {
-        Board that = (Board) y;
-
-        if (that == null) {
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        
+        if (other == null) {
             return false;
         }
+        
+        if (getClass() != other.getClass()) {
+            return false;
+        }
+        
+        Board that = (Board) other;
 
         if (dimension != that.dimension) {
             return false;
@@ -153,8 +167,8 @@ public class Board {
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        int firstRandom = getRandomNotZeroTileNotLike(-1);
-        int secondRandom = getRandomNotZeroTileNotLike(firstRandom);
+        int firstRandom = firstTwinRandomTile;
+        int secondRandom = secondTwinRandomTile;
 
         int firstTileValue = tiles1D[firstRandom];
         int secondTileValue = tiles1D[secondRandom];
