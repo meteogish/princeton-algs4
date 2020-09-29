@@ -1,5 +1,7 @@
 import java.util.LinkedList;
 
+import edu.princeton.cs.algs4.StdRandom;
+
 public class Board {
     private transient int _dimension;
     private transient int[] _tiles1D;
@@ -30,20 +32,6 @@ public class Board {
                 _tiles1D[to1D(i, j)] = tiles[i][j];
             }
         }
-    }
-
-    public boolean isSolvable() {
-        int invCount = 0;
-
-        for (int i = 0; i < _dimension * _dimension; i++) {
-            for(int j = i + 1; j < _dimension * _dimension; j++) {
-                if (_tiles1D[i] != 0 && _tiles1D[j] != 0  && _tiles1D[i] > _tiles1D[j]) {
-                    ++invCount;
-                }
-            }
-        }
-
-        return invCount % 2 == 0;
     }
                                            
     // string representation of this board
@@ -136,12 +124,6 @@ public class Board {
         return true;
     }
 
-    @Override
-    @SuppressWarnings("PMD.OverrideBothEqualsAndHashcode")
-    public int hashCode() {
-        throw new UnsupportedOperationException();
-    }
-
     // all neighboring boards
     public Iterable<Board> neighbors() {
         LinkedList<Board> result = new LinkedList<>();
@@ -167,7 +149,44 @@ public class Board {
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        return null;
+        int firstRandom = getRandomNotZeroTileNotLike(-1);
+        int secondRandom = getRandomNotZeroTileNotLike(firstRandom);
+
+        int firstTileValue = _tiles1D[firstRandom];
+        int secondTileValue = _tiles1D[secondRandom];
+
+        int[][] newTiles = new int[_dimension][_dimension];
+
+        for (int i = 0; i < _dimension; i++) {
+            for (int j = 0; j < _dimension; j++) {
+                int oneD = to1D(i, j);
+                if (oneD == firstRandom) {
+                    newTiles[i][j] = secondTileValue;
+                }
+                else if (oneD == secondRandom) {
+                    newTiles[i][j] = firstTileValue;
+                }
+                else 
+                {
+                    newTiles[i][j] = _tiles1D[oneD];
+                }
+            }
+        }
+
+        return new Board(newTiles);
+    }
+
+    private int getRandomNotZeroTileNotLike(int notLike)
+    {
+        int zeroAt = to1D(zeroAtY, zeroAtX);
+        int tile = -1;
+
+        do
+        {
+            tile = StdRandom.uniform(_tiles1D.length);
+        } while (tile == zeroAt || tile == notLike);
+
+        return tile;
     }
 
     private Board createNeighbor(int moveZeroToY, int moveZeroToX) {
