@@ -106,14 +106,14 @@
     <!-- allow more than one initialization variable in a for loop in CircularSuffixArray -->
     <rule ref="category/java/bestpractices.xml/ForLoopVariableCount">
         <properties>
-            <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[(@Image='CircularSuffixArray')]"/>
+            <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[(@SimpleName='CircularSuffixArray')]"/>
         </properties>
     </rule>
 
     <!-- allow array to be stored directly in Substring subclass in CircularSuffixArray -->
     <rule ref="category/java/bestpractices.xml/ArrayIsStoredDirectly">
         <properties>
-            <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[(@Image='CircularSuffixArray')]"/>
+            <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[(@SimpleName='CircularSuffixArray')]"/>
         </properties>
     </rule>
 
@@ -236,7 +236,7 @@
 
     <rule ref="category/java/errorprone.xml/AvoidBranchingStatementAsLastInLoop" message="Avoid using a ''continue'', ''break'', or ''return'' statement as the last statement in a loop.">
         <properties>
-            <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[(@Image='SAP') or (@Image='ShortestCommonAncestor')]"/>
+            <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[(@SimpleName='SAP') or (@Image='ShortestCommonAncestor')]"/>
         </properties>
     </rule>
 
@@ -273,7 +273,7 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                        //ClassOrInterfaceDeclaration[@Image='Board' and @Nested='false']
+                        //ClassOrInterfaceDeclaration[@SimpleName='Board' and @Nested='false']
                         [count(./*/*/FieldDeclaration[@Static='false']/VariableDeclarator/VariableDeclaratorId[@ArrayType = 'true']) > 1]
                     ]]>
                 </value>
@@ -293,7 +293,7 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                        //ClassOrInterfaceDeclaration[@Image='Board' and @Nested='false']
+                        //ClassOrInterfaceDeclaration[@SimpleName='Board' and @Nested='false']
                         [count(./*/*/FieldDeclaration[@Static='false']/VariableDeclarator/VariableDeclaratorId[typeIs('int[][]')]) > 0]
                         //PrimaryExpression/PrimaryPrefix/Name[@Image='Arrays.equals']
                     ]]>

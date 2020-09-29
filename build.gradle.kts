@@ -62,7 +62,7 @@ pmd {
     rulePriority = 5
     ruleSetFiles = files("config/pmd/pmd.xml")
     reportsDir = file("build/reports/pmd")
-    maxFailures.set(10)
+    maxFailures.set(20)
 }
 
 dependencies {
@@ -79,5 +79,5 @@ dependencies {
 
 application {
     // Define the main class for the application
-    mainClassName = "SortingAlgs"
+    mainClassName = "BoardTest"
 }
