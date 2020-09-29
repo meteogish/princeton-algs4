@@ -3,8 +3,8 @@ import java.util.LinkedList;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class Board {
-    private final transient int _dimension;
-    private final transient int[] _tiles1D;
+    private final int dimension;
+    private final int[] tiles1D;
     private int zeroAtY;
     private int zeroAtX;
 
@@ -19,17 +19,17 @@ public class Board {
             throw new IllegalArgumentException("The tiles size is not supported");
         }
 
-        _dimension = tiles.length;
-        _tiles1D = new int[_dimension * _dimension];
+        dimension = tiles.length;
+        tiles1D = new int[dimension * dimension];
 
-        for (int i = 0; i < _dimension; i++) {
-            for (int j = 0; j < _dimension; j++) {
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
                 if (tiles[i][j] == 0) {
                     zeroAtY = i;
                     zeroAtX = j;
                 }
 
-                _tiles1D[to1D(i, j)] = tiles[i][j];
+                tiles1D[to1D(i, j)] = tiles[i][j];
             }
         }
     }
@@ -39,13 +39,13 @@ public class Board {
         
         StringBuilder sb = new StringBuilder();
         
-        sb.append(_dimension);
+        sb.append(dimension);
 
-        for (int i = 0; i < _dimension; i++) {
+        for (int i = 0; i < dimension; i++) {
             sb.append("\n");
-            for (int j = 0; j < _dimension; j++) {
+            for (int j = 0; j < dimension; j++) {
                 sb.append(" ");
-                sb.append(_tiles1D[to1D(i, j)]);
+                sb.append(tiles1D[to1D(i, j)]);
             }
         }
         return sb.toString();
@@ -53,17 +53,17 @@ public class Board {
 
     // board dimension n
     public int dimension() {
-        return _dimension;
+        return dimension;
     }
 
     // number of tiles out of place
     public int hamming() {
         int result = 0;
 
-        for (int i = 0; i < _dimension; i++) {
-            for (int j = 0; j < _dimension; j++) {
-                int rightValue = i * _dimension + j + 1;
-                int currentState = _tiles1D[to1D(i, j)];
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                int rightValue = i * dimension + j + 1;
+                int currentState = tiles1D[to1D(i, j)];
                 if (currentState != 0 && currentState != rightValue) {
                     // System.out.println("Increase hamming at point " + i + " " + j);
                     ++result;
@@ -77,12 +77,12 @@ public class Board {
     public int manhattan() {
         int result = 0;
 
-        for (int i = 0; i < _dimension; i++) {
-            for (int j = 0; j < _dimension; j++) {
-                int currentState = _tiles1D[to1D(i, j)];
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                int currentState = tiles1D[to1D(i, j)];
 
-                int x = (currentState - 1) % _dimension;
-                int y = (currentState - 1) / _dimension;
+                int x = (currentState - 1) % dimension;
+                int y = (currentState - 1) / dimension;
                 int dist = 
                     currentState == 0
                     ? 0
@@ -96,8 +96,8 @@ public class Board {
 
     // is this board the goal board?
     public boolean isGoal() {
-        for (int i = 0; i < _dimension * _dimension - 1; i++) {
-           if (_tiles1D[i] == 0 || _tiles1D[i] != i + 1) {
+        for (int i = 0; i < dimension * dimension - 1; i++) {
+           if (tiles1D[i] == 0 || tiles1D[i] != i + 1) {
                return false;
            } 
         }
@@ -113,13 +113,13 @@ public class Board {
             return false;
         }
 
-        if (_dimension != that._dimension) {
+        if (dimension != that.dimension) {
             return false;
         }
 
-        for (int i = 0; i < _dimension; i++) {
-            for (int j = 0; j < _dimension; j++) {
-                if (_tiles1D[to1D(i,j)] != that._tiles1D[to1D(i,j)]) {
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                if (tiles1D[to1D(i, j)] != that.tiles1D[to1D(i, j)]) {
                     return false;
                 }
             }
@@ -136,7 +136,7 @@ public class Board {
             result.add(createNeighbor(zeroAtY, zeroAtX - 1));
         }
 
-        if (zeroAtX + 1 < _dimension) {
+        if (zeroAtX + 1 < dimension) {
             result.add(createNeighbor(zeroAtY, zeroAtX + 1));
         }
 
@@ -144,7 +144,7 @@ public class Board {
             result.add(createNeighbor(zeroAtY - 1, zeroAtX));
         }
 
-        if (zeroAtY + 1 < _dimension) {
+        if (zeroAtY + 1 < dimension) {
             result.add(createNeighbor(zeroAtY + 1, zeroAtX));
         }
 
@@ -156,13 +156,13 @@ public class Board {
         int firstRandom = getRandomNotZeroTileNotLike(-1);
         int secondRandom = getRandomNotZeroTileNotLike(firstRandom);
 
-        int firstTileValue = _tiles1D[firstRandom];
-        int secondTileValue = _tiles1D[secondRandom];
+        int firstTileValue = tiles1D[firstRandom];
+        int secondTileValue = tiles1D[secondRandom];
 
-        int[][] newTiles = new int[_dimension][_dimension];
+        int[][] newTiles = new int[dimension][dimension];
 
-        for (int i = 0; i < _dimension; i++) {
-            for (int j = 0; j < _dimension; j++) {
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
                 int oneD = to1D(i, j);
                 if (oneD == firstRandom) {
                     newTiles[i][j] = secondTileValue;
@@ -172,7 +172,7 @@ public class Board {
                 }
                 else 
                 {
-                    newTiles[i][j] = _tiles1D[oneD];
+                    newTiles[i][j] = tiles1D[oneD];
                 }
             }
         }
@@ -187,17 +187,17 @@ public class Board {
 
         do
         {
-            tile = StdRandom.uniform(_tiles1D.length);
+            tile = StdRandom.uniform(tiles1D.length);
         } while (tile == zeroAt || tile == notLike);
 
         return tile;
     }
 
     private Board createNeighbor(int moveZeroToY, int moveZeroToX) {
-        int[][] copy = new int[_dimension][_dimension];
-        for (int i = 0; i < _dimension; i++) {
-            for (int j = 0; j < _dimension; j++) {
-                copy[i][j] = _tiles1D[to1D(i,j)];
+        int[][] copy = new int[dimension][dimension];
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                copy[i][j] = tiles1D[to1D(i, j)];
             }
         }
 
@@ -209,10 +209,6 @@ public class Board {
     }
 
     private int to1D(int y, int x) {
-        return y * _dimension + x;
+        return y * dimension + x;
     }
-
-    // unit testing (not graded)
-    //public static void main(String[] args)
-
 }
