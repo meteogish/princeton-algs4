@@ -53,6 +53,7 @@ public class KdTree {
         if (root == null)
         {
             root = newNode;
+            count++;
         }
         else {
             insert(root, newNode, true);
@@ -120,7 +121,18 @@ public class KdTree {
 
     public boolean contains(Point2D p) // does the set contain point p?
     {
-        return true;
+        if (p == null) {
+            throw new IllegalArgumentException();
+        }
+        return containsRec(p, root);
+    }
+    
+    private boolean containsRec(Point2D p, Node node) {
+        if (node == null) {
+            return false;
+        }
+        
+        return node.point.equals(p) || containsRec(p, node.left) || containsRec(p, node.right);
     }
 
     public void draw() // draw all points to standard draw
