@@ -61,56 +61,46 @@ public class KdTree {
     
     private void insert(Node currentNode, Node newNode, boolean isVerticalLevel)
     {
-        //left or right rects only
+        int compareResult = 0;
+        int rightRectangleType = 0;
+        int leftRectangleType = 0;
         if (isVerticalLevel) {
-            if (newNode.point.x() > currentNode.point.x()) {
-                if (currentNode.right == null)
-                {
-                    newNode.rect = getRectangle(currentNode.point, currentNode.rect, 3);
-                    currentNode.right = newNode;
-                    ++count;
-                }
-                else {
-                    insert(currentNode.right, newNode, !isVerticalLevel);
-                }
+            compareResult = Double.compare(newNode.point.x(), currentNode.point.x());
+            //left or right rects only
+            rightRectangleType = 3;
+            leftRectangleType = 0;
+        }
+        else {
+            compareResult = Double.compare(newNode.point.y(), currentNode.point.y());
+            //top or bottom rects only
+            rightRectangleType = 1;
+            leftRectangleType = 2;
+        }
+
+        if (compareResult > 0) {
+            if (currentNode.right == null)
+            {
+                newNode.rect = getRectangle(currentNode.point, currentNode.rect, rightRectangleType);
+                currentNode.right = newNode;
+                ++count;
             }
-            else if (newNode.point.x() < currentNode.point.x()) {
-                if (currentNode.left == null) {
-                    newNode.rect = getRectangle(currentNode.point, currentNode.rect, 0);
-                    currentNode.left = newNode;
-                    ++count;
-                }
-                else {
-                    insert(currentNode.left, newNode, !isVerticalLevel);
-                }
+            else {
+                insert(currentNode.right, newNode, !isVerticalLevel);
             }
         }
-        //top or bottom rects only
-        else {
-            if (newNode.point.y() > currentNode.point.y()) {
-                if (currentNode.right == null)
-                {
-                    newNode.rect = getRectangle(currentNode.point, currentNode.rect, 1);
-                    currentNode.right = newNode;
-                }
-                else {
-                    insert(currentNode.right, newNode, !isVerticalLevel);
-                }
+        else if (compareResult < 0) {
+            if (currentNode.left == null) {
+                newNode.rect = getRectangle(currentNode.point, currentNode.rect, leftRectangleType);
+                currentNode.left = newNode;
+                ++count;
             }
-            else if (newNode.point.y() < currentNode.point.y()) {
-                if (currentNode.left == null) {
-                    newNode.rect = getRectangle(currentNode.point, currentNode.rect, 2);
-                    currentNode.left = newNode;
-                }
-                else {
-                    insert(currentNode.left, newNode, !isVerticalLevel);
-                }
+            else {
+                insert(currentNode.left, newNode, !isVerticalLevel);
             }
         }
     }
 
     private RectHV getRectangle(Point2D point, RectHV enclosingRect, int quarter) {
-        //RectHV(double xmin, double ymin, double xmax, double ymax
         switch (quarter) {
             //left
             case 0:
