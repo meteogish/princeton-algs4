@@ -66,17 +66,19 @@ public class KdTree {
             if (newNode.point.x() > currentNode.point.x()) {
                 if (currentNode.right == null)
                 {
-                    newNode.rect = getRectangle(currentNode.point, 3);
+                    newNode.rect = getRectangle(currentNode.point, currentNode.rect, 3);
                     currentNode.right = newNode;
+                    ++count;
                 }
                 else {
                     insert(currentNode.right, newNode, !isVerticalLevel);
                 }
             }
-            else {
+            else if (newNode.point.x() < currentNode.point.x()) {
                 if (currentNode.left == null) {
-                    newNode.rect = getRectangle(currentNode.point, 0);
+                    newNode.rect = getRectangle(currentNode.point, currentNode.rect, 0);
                     currentNode.left = newNode;
+                    ++count;
                 }
                 else {
                     insert(currentNode.left, newNode, !isVerticalLevel);
@@ -88,16 +90,16 @@ public class KdTree {
             if (newNode.point.y() > currentNode.point.y()) {
                 if (currentNode.right == null)
                 {
-                    newNode.rect = getRectangle(currentNode.point, 1);
+                    newNode.rect = getRectangle(currentNode.point, currentNode.rect, 1);
                     currentNode.right = newNode;
                 }
                 else {
                     insert(currentNode.right, newNode, !isVerticalLevel);
                 }
             }
-            else {
+            else if (newNode.point.y() < currentNode.point.y()) {
                 if (currentNode.left == null) {
-                    newNode.rect = getRectangle(currentNode.point, 2);
+                    newNode.rect = getRectangle(currentNode.point, currentNode.rect, 2);
                     currentNode.left = newNode;
                 }
                 else {
@@ -107,21 +109,21 @@ public class KdTree {
         }
     }
 
-    private RectHV getRectangle(Point2D point, int quarter) {
+    private RectHV getRectangle(Point2D point, RectHV enclosingRect, int quarter) {
         //RectHV(double xmin, double ymin, double xmax, double ymax
         switch (quarter) {
             //left
             case 0:
-                return new RectHV(0.0, 0.0, point.x(), 1.0);
+                return new RectHV(enclosingRect.xmin(), enclosingRect.ymin(), point.x(), enclosingRect.ymax());
             //top
             case 1:
-                return new RectHV(0.0, point.y(), 1.0, 1.0);
+                return new RectHV(enclosingRect.xmin(), point.y(), enclosingRect.xmax(), enclosingRect.ymax());
             //bottom
             case 2:
-                return new RectHV(0.0, 0.0, 1.0, point.y());
+                return new RectHV(enclosingRect.xmin(), enclosingRect.ymin(), enclosingRect.xmax(), point.y());
             //right
             default:
-                return new RectHV(point.x(), 0.0, 1.0, 1.0);
+                return new RectHV(point.x(), enclosingRect.ymin(), enclosingRect.xmax(), enclosingRect.ymax());
         }
     }
 
@@ -143,11 +145,11 @@ public class KdTree {
             StdDraw.setPenRadius();
             if (isVerticalLevel) {
                 StdDraw.setPenColor(StdDraw.RED);
-                StdDraw.line(node.point.x(), 0.0, node.point.x(), 1.0);
+                StdDraw.line(node.point.x(), node.rect.ymin(), node.point.x(), node.rect.ymax());
             }
             else {
                 StdDraw.setPenColor(StdDraw.BLUE);
-                StdDraw.line(0.0, node.point.y(), 1.0, node.point.y());
+                StdDraw.line(node.rect.xmin(), node.point.y(), node.rect.xmax(), node.point.y());
             }
 
             StdDraw.setPenColor();
