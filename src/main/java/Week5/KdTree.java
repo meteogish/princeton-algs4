@@ -165,7 +165,26 @@ public class KdTree {
         if (rect == null) {
             throw new IllegalArgumentException();
         }
-        return null;
+        LinkedList<Point2D> found = new LinkedList<>();
+        return rangeRec(found, rect, root);
+    }
+    
+    LinkedList<Point2D> rangeRec(LinkedList<Point2D> agg, RectHV rect, Node node) 
+    {
+        if (node == null) {
+            return agg;
+        }
+        
+        if (!node.rect.intersects(rect)) {
+            return agg;
+        }
+
+        if (rect.contains(node.point)) {
+            agg.add(node.point);
+        }
+        
+        LinkedList<Point2D> leftResult = rangeRec(agg, rect, node.left);
+        return rangeRec(leftResult, rect, node.right);
     }
 
     public Point2D nearest(Point2D p) // a nearest neighbor in the set to point p; null if the set is empty
@@ -173,6 +192,42 @@ public class KdTree {
         if (p == null) {
             throw new IllegalArgumentException();
         }
+
+        if (root != null) {
+            return nearestRec(p, root.point, root, true);
+        }
         return null;
+    }
+    
+    public Point2D nearestRec(Point2D target, Point2D bestSoFar, Node node, boolean isVerticalLevel)
+    {
+        if (node == null) {
+            return bestSoFar;
+        }
+        double distanceToBest = bestSoFar.distanceTo(target);
+        double distanceToNodePoint = node.point.distanceTo(target);
+        
+        if (distanceToNodePoint < distanceToBest)
+        {
+            bestSoFar = node.point;
+            distanceToBest = distanceToNodePoint;
+        }
+        
+        double distanceToLeftRect = node.left == null ? Double.MAX_VALUE : node.left.rect.distanceTo(target);
+        double distanceToRightRect = node.right == null ? Double.MAX_VALUE : node.right.rect.distanceTo(target);
+        
+        if (distanceToLeftRect < distanceToRightRect) {
+            Point2D newBestSoFar = nearestRec(target, bestSoFar, node.left, !isVerticalLevel);
+            if (newBestSoFar.equals(bestSoFar)) {
+                return nearestRec(target, bestSoFar, node.right, !isVerticalLevel);
+            }
+            return newBestSoFar;
+        } else {
+            Point2D newBestSoFar = nearestRec(target, bestSoFar, node.right, !isVerticalLevel);
+            if (newBestSoFar.equals(bestSoFar)) {
+                return nearestRec(target, bestSoFar, node.left, !isVerticalLevel);
+            }
+            return newBestSoFar;
+        }
     }
 }
