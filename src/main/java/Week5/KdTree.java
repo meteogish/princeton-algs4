@@ -3,7 +3,6 @@ import java.util.LinkedList;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
 
 public class KdTree {
     private static class Node {
@@ -38,25 +37,22 @@ public class KdTree {
         if (p == null) {
             throw new IllegalArgumentException();
         }
-        
+
         Node newNode = new Node();
         newNode.point = p;
         newNode.rect = new RectHV(0.0, 0.0, 1.0, 1.0);
         newNode.left = null;
         newNode.right = null;
 
-        if (root == null)
-        {
+        if (root == null) {
             root = newNode;
             ++count;
-        }
-        else {
+        } else {
             insert(root, newNode, true);
         }
     }
-    
-    private void insert(Node currentNode, Node newNode, boolean isVerticalLevel)
-    {
+
+    private void insert(Node currentNode, Node newNode, boolean isVerticalLevel) {
         if (currentNode.point.equals(newNode.point)) {
             return;
         }
@@ -69,32 +65,27 @@ public class KdTree {
             // left or right rects only
             rightRectangleType = 3;
             leftRectangleType = 0;
-        }
-        else {
+        } else {
             compareResult = Double.compare(newNode.point.y(), currentNode.point.y());
             // top or bottom rects only
             rightRectangleType = 1;
             leftRectangleType = 2;
         }
-        
+
         if (compareResult < 0) {
             if (currentNode.left == null) {
                 newNode.rect = getRectangle(currentNode.point, currentNode.rect, leftRectangleType);
                 currentNode.left = newNode;
                 ++count;
-            }
-            else {
+            } else {
                 insert(currentNode.left, newNode, !isVerticalLevel);
             }
-        }
-        else {
-            if (currentNode.right == null)
-            {
+        } else {
+            if (currentNode.right == null) {
                 newNode.rect = getRectangle(currentNode.point, currentNode.rect, rightRectangleType);
                 currentNode.right = newNode;
                 ++count;
-            }
-            else {
+            } else {
                 insert(currentNode.right, newNode, !isVerticalLevel);
             }
         }
@@ -117,7 +108,6 @@ public class KdTree {
         }
     }
 
-
     public boolean contains(Point2D p) // does the set contain point p?
     {
         if (p == null) {
@@ -125,16 +115,16 @@ public class KdTree {
         }
         return containsRec(p, root);
     }
-    
+
     private boolean containsRec(Point2D p, Node node) {
         if (node == null) {
             return false;
         }
-        
+
         if (!node.rect.contains(p)) {
             return false;
         }
-        
+
         return node.point.equals(p) || containsRec(p, node.left) || containsRec(p, node.right);
     }
 
@@ -142,7 +132,7 @@ public class KdTree {
     {
         drawNode(root, true);
     }
-    
+
     private void drawNode(Node node, boolean isVerticalLevel) {
         if (node != null) {
             StdDraw.setPenRadius(0.01);
@@ -151,8 +141,7 @@ public class KdTree {
             if (isVerticalLevel) {
                 StdDraw.setPenColor(StdDraw.RED);
                 StdDraw.line(node.point.x(), node.rect.ymin(), node.point.x(), node.rect.ymax());
-            }
-            else {
+            } else {
                 StdDraw.setPenColor(StdDraw.BLUE);
                 StdDraw.line(node.rect.xmin(), node.point.y(), node.rect.xmax(), node.point.y());
             }
@@ -171,13 +160,12 @@ public class KdTree {
         LinkedList<Point2D> found = new LinkedList<>();
         return rangeRec(found, rect, root);
     }
-    
-    private LinkedList<Point2D> rangeRec(LinkedList<Point2D> agg, RectHV rect, Node node) 
-    {
+
+    private LinkedList<Point2D> rangeRec(LinkedList<Point2D> agg, RectHV rect, Node node) {
         if (node == null) {
             return agg;
         }
-        
+
         if (!node.rect.intersects(rect)) {
             return agg;
         }
@@ -185,7 +173,7 @@ public class KdTree {
         if (rect.contains(node.point)) {
             agg.add(node.point);
         }
-        
+
         LinkedList<Point2D> leftResult = rangeRec(agg, rect, node.left);
         return rangeRec(leftResult, rect, node.right);
     }
@@ -197,51 +185,32 @@ public class KdTree {
         }
 
         if (root != null) {
-            return nearestRec(p, root.point, root, 1);
+            return nearestRec(p, root.point, root, true);
         }
         return null;
     }
-    
-    private Point2D nearestRec(Point2D target, Point2D bestSoFar, Node node, int level)
-    {
+
+    private Point2D nearestRec(Point2D target, Point2D bestSoFar, Node node, boolean isVerticalLevel) {
         if (node == null) {
             return bestSoFar;
         }
-        boolean isVerticalLevel = level % 2 == 1;
-        StdOut.printf("level %d\n", level);
-        double distanceToBest = bestSoFar.distanceSquaredTo(target);
 
-        if (distanceToBest > node.point.distanceSquaredTo(bestSoFar)) {
+        if (node.point.distanceSquaredTo(target) < bestSoFar.distanceSquaredTo(target)) {
             bestSoFar = node.point;
         }
 
-        StdOut.printf("bestsofar: %f, %f\n", bestSoFar.x(), bestSoFar.y());
-        
-        boolean shouldGoLeft = isVerticalLevel 
-            ? node.point.x() > target.x()
-            : node.point.y() > target.y();
-        
-        double distanceToLeftRect = node.left == null ? Double.POSITIVE_INFINITY : node.left.rect.distanceSquaredTo(target);
-        double distanceToRightRect = node.right == null ? Double.POSITIVE_INFINITY : node.right.rect.distanceSquaredTo(target);
-        StdOut.printf("distanceToLeftRect: %f, distanceToRightRect: %f\n", distanceToLeftRect, distanceToRightRect);
+        boolean shouldGoLeft = isVerticalLevel ? node.point.x() > target.x() : node.point.y() > target.y();
+
         if (shouldGoLeft) {
-            StdOut.printf("distance to left rect is smaller: %f\n", distanceToLeftRect);
-            Point2D newBestSoFar = nearestRec(target, bestSoFar, node.left, level + 1);
-            StdOut.printf("newer bestsofar from left rect: %f, %f\n", newBestSoFar.x(), newBestSoFar.y());
-            double newBestSoFarDistance = newBestSoFar.distanceTo(target);
-            double rightRectDist = node.right != null ? node.right.rect.distanceSquaredTo(target) : Double.POSITIVE_INFINITY;
-            if (newBestSoFarDistance > rightRectDist) {
-                return nearestRec(target, newBestSoFar, node.right, level + 1);
+            Point2D newBestSoFar = nearestRec(target, bestSoFar, node.left, !isVerticalLevel);
+            if (node.right != null && node.right.rect.distanceSquaredTo(target) < newBestSoFar.distanceSquaredTo(target)) {
+                return nearestRec(target, newBestSoFar, node.right, !isVerticalLevel);
             }
             return newBestSoFar;
         } else {
-            StdOut.printf("distance to right rect is smaller: %f\n", distanceToRightRect);
-            Point2D newBestSoFar = nearestRec(target, bestSoFar, node.right, level + 1);
-            StdOut.printf("newer bestsofar from right rect: %f, %f\n", newBestSoFar.x(), newBestSoFar.y());
-            double newBestSoFarDistance = newBestSoFar.distanceTo(target);
-            double leftRectDist = node.left != null ? node.left.rect.distanceSquaredTo(target) : Double.POSITIVE_INFINITY;
-            if (newBestSoFarDistance > leftRectDist){
-                return nearestRec(target, newBestSoFar, node.left, level + 1);
+            Point2D newBestSoFar = nearestRec(target, bestSoFar, node.right, !isVerticalLevel);
+            if (node.left != null && node.left.rect.distanceSquaredTo(target) < newBestSoFar.distanceSquaredTo(target)) {
+                return nearestRec(target, newBestSoFar, node.left, !isVerticalLevel);
             }
             return newBestSoFar;
         }
